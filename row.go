@@ -19,7 +19,7 @@ func R(values ...interface{}) *RowProtoype {
 	vv := values
 
 	if reflect.TypeOf(values[0]).Kind() == reflect.Slice {
-		fmt.Println("values is a slice at values[0]")
+		//fmt.Println("values is a slice at values[0]")
 		vv = values[0].([]interface{})
 	}
 
