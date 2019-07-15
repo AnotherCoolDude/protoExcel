@@ -60,25 +60,59 @@ func (r *Read) Rows(sheetname string) []*RowProtoype {
 
 		values := []interface{}{}
 
-		for _, cell := range row.Cells() {
-			switch {
-			case cell.IsBool():
-				v, _ := cell.GetValueAsBool()
-				values = append(values, v)
-			case cell.IsNumber():
-				v, _ := cell.GetValueAsNumber()
-				values = append(values, v)
-			case cell.IsEmpty():
-				values = append(values, "")
-			default:
-				v, _ := cell.GetRawValue()
-				values = append(values, v)
+		lastCellIdx := len(row.Cells())
+		lastCell := row.Cells()[lastCellIdx]
+		lastCellCol, _ := lastCell.Column()
+		colNum, _ := columnNameToNumber(lastCellCol)
+		cells := row.Cells()
+
+		for i := 1; i <= colNum; i++ {
+			for _, cell := range cells {
+				col, _ := cell.Column()
+				num, _ := columnNameToNumber(col)
+				if num == i {
+					switch {
+					case cell.IsBool():
+						v, _ := cell.GetValueAsBool()
+						values = append(values, v)
+					case cell.IsNumber():
+						v, _ := cell.GetValueAsNumber()
+						values = append(values, v)
+					case cell.IsEmpty():
+						values = append(values, "")
+					default:
+						v, _ := cell.GetRawValue()
+						values = append(values, v)
+					}
+				} else {
+					values = append(values, " ")
+				}
+			}
+			if r.verbose {
+				bar.Increment()
 			}
 		}
-		if r.verbose {
-			bar.Increment()
-		}
 		rows = append(rows, R(values))
+
+		// for _, cell := range row.Cells() {
+		// 	switch {
+		// 	case cell.IsBool():
+		// 		v, _ := cell.GetValueAsBool()
+		// 		values = append(values, v)
+		// 	case cell.IsNumber():
+		// 		v, _ := cell.GetValueAsNumber()
+		// 		values = append(values, v)
+		// 	case cell.IsEmpty():
+		// 		values = append(values, "")
+		// 	default:
+		// 		v, _ := cell.GetRawValue()
+		// 		values = append(values, v)
+		// 	}
+		// }
+		// if r.verbose {
+		// 	bar.Increment()
+		// }
+		// rows = append(rows, R(values))
 	}
 	if r.verbose {
 		bar.Finish()
@@ -106,7 +140,7 @@ func (r *Read) Column(sheetname string, col int) []*CellPrototype {
 			cells = append(cells, &CellPrototype{Value: "", Border: None})
 		}
 		for idx, c := range *row {
-			if idx == col {
+			if idx == col-1 {
 				cells = append(cells, c)
 			}
 		}
