@@ -61,12 +61,14 @@ func (r *Read) Rows(sheetname string) []*RowProtoype {
 		values := []interface{}{}
 
 		lastCellIdx := len(row.Cells())
-		lastCell := row.Cells()[lastCellIdx]
+		lastCell := row.Cells()[lastCellIdx-1]
 		lastCellCol, _ := lastCell.Column()
 		colNum, _ := columnNameToNumber(lastCellCol)
 		cells := row.Cells()
 
+		found := false
 		for i := 1; i <= colNum; i++ {
+
 			for _, cell := range cells {
 				col, _ := cell.Column()
 				num, _ := columnNameToNumber(col)
@@ -84,13 +86,17 @@ func (r *Read) Rows(sheetname string) []*RowProtoype {
 						v, _ := cell.GetRawValue()
 						values = append(values, v)
 					}
-				} else {
-					values = append(values, " ")
+					found = true
 				}
 			}
-			if r.verbose {
-				bar.Increment()
+			if !found {
+				values = append(values, " ")
 			}
+			found = false
+
+		}
+		if r.verbose {
+			bar.Increment()
 		}
 		rows = append(rows, R(values))
 
