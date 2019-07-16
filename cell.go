@@ -39,7 +39,7 @@ func (cell *CellPrototype) CoordsToString() string {
 }
 
 func (coords *coordinates) coordsToString() string {
-	colStr, err := columnNumberToName(coords.column)
+	colStr, err := ColumnNumberToName(coords.column)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -52,7 +52,7 @@ func coordinatesFromString(coordString string) *coordinates {
 	if err != nil {
 		fmt.Println(err)
 	}
-	col, err := columnNameToNumber(colStr)
+	col, err := ColumnNameToNumber(colStr)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -64,11 +64,10 @@ func coordinatesFromString(coordString string) *coordinates {
 
 //helper
 
-// columnNameToNumber provides a function to convert Excel sheet column name
+// ColumnNameToNumber provides a function to convert Excel sheet column name
 // to int. Column name case insensitive. The function returns an error if
 // column name incorrect.
-
-func columnNameToNumber(name string) (int, error) {
+func ColumnNameToNumber(name string) (int, error) {
 	if len(name) == 0 {
 		return -1, errors.New("[cell.go/columnNameToNumber] received empty string")
 	}
@@ -88,10 +87,9 @@ func columnNameToNumber(name string) (int, error) {
 	return col, nil
 }
 
-// columnNumberToName provides a function to convert the integer to Excel
+// ColumnNumberToName provides a function to convert the integer to Excel
 // sheet column title.
-
-func columnNumberToName(num int) (string, error) {
+func ColumnNumberToName(num int) (string, error) {
 	if num < 1 {
 		return "", fmt.Errorf("[cell.go/columnNumberToName] incorrect column number %d", num)
 	}

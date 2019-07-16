@@ -63,7 +63,7 @@ func (r *Read) Rows(sheetname string) []*RowProtoype {
 		lastCellIdx := len(row.Cells())
 		lastCell := row.Cells()[lastCellIdx-1]
 		lastCellCol, _ := lastCell.Column()
-		colNum, _ := columnNameToNumber(lastCellCol)
+		colNum, _ := ColumnNameToNumber(lastCellCol)
 		cells := row.Cells()
 
 		found := false
@@ -71,7 +71,7 @@ func (r *Read) Rows(sheetname string) []*RowProtoype {
 
 			for _, cell := range cells {
 				col, _ := cell.Column()
-				num, _ := columnNameToNumber(col)
+				num, _ := ColumnNameToNumber(col)
 				if num == i {
 					switch {
 					case cell.IsBool():
