@@ -90,7 +90,7 @@ func (r *Read) Rows(sheetname string) []*RowProtoype {
 				}
 			}
 			if !found {
-				values = append(values, " ")
+				values = append(values, "")
 			}
 			found = false
 
